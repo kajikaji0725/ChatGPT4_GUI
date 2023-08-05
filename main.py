@@ -1,78 +1,74 @@
+from chatgpt4_gui import View, Setting
 import flet as ft
-import time
-from math import pi
-from chatgpt4_gui import QuestionComponent
+
 
 def main(page: ft.Page):
-    
-    def page_resize(e):
-        print("New page size:", page.window_width, page.window_height)
-    print(vars(page.on_resize))
-    page.on_resize = page_resize
-    print(vars(page.on_resize))
-    
+
+    view = View(page)
+    page.add(view)
+    setting = Setting(view)
+    page.on_resize = view.resize
+    pick_files_dialog = ft.FilePicker(on_result=view.save_file_result)
+    page.overlay.append(pick_files_dialog)
+
+    appBar = ft.AppBar(
+        leading=ft.Icon(ft.icons.PALETTE),
+        leading_width=40,
+        title=ft.Text("ChatGPT for GUI"),
+        center_title=False,
+        bgcolor=ft.colors.SURFACE_VARIANT,
+        actions=[
+            ft.IconButton(ft.icons.DELETE, on_click=view.open_dialog),
+            ft.IconButton(ft.icons.DOWNLOAD,
+                          on_click=pick_files_dialog.save_file),
+            ft.IconButton(
+                ft.icons.HOME, on_click=lambda _: page.go('/home')),
+            ft.IconButton(ft.icons.SETTINGS,
+                          on_click=lambda _: page.go('/setting')),
+        ],
+    )
+
+    page.appbar = appBar
     page.update()
-    
-ft.app(target=main)
+    page.window_min_width = 740
+
+    def route_change(route):
+        if page.route == "/home":
+            page.views.append(
+                ft.View(
+                    "/home",
+                    [
+                        view,
+                        appBar
+                    ],
+                )
+            )
+
+        if page.route == "/setting":
+            page.views.append(
+                ft.View(
+                    "/setting",
+                    [
+                        setting,
+                        appBar
+                    ],
+                )
+            )
+        page.update()
+
+    def view_pop(view):
+        page.views.pop()
+        if len(page.views) > 1:
+            page.update()
+        else:
+            page.go('/')
+
+    page.on_route_change = route_change
+    page.on_view_pop = view_pop
+    page.go(page.route)
+
+    page.update()
 
 
-
-
-
-
-
-
-# これを使おう
-# ft.ListView(expand=True, spacing=10)
-
-# def main(page: ft.Page):
-    
-#     first_name = ft.Ref[ft.TextField]()
-#     last_name= ft.Ref[ft.TextField]()
-#     greetings = ft.Ref[ft.Column]()
-    
-#     def btn_click(e):
-#         greetings.current.controls.append(ft.Text(f"Hello, {first_name.current.value} {last_name.current.value}!"))
-#         first_name.current.value = ""
-#         last_name.current.value = ""
-#         page.update()
-#         first_name.current.focus()
-    
-#     page.add(
-#         ft.TextField(ref=first_name, label="First name", autofocus=True),
-#         ft.TextField(ref=last_name, label="Last name"),
-#         ft.ElevatedButton("Say hello!", on_click=btn_click),
-#         ft.Column(ref=greetings)
-#     )
-
-# page.scroll = ft.ScrollMode.AUTO
-#     def on_scroll(e: ft.OnScrollEvent):
-#         if e.pixels >= e.max_scroll_extent - 100:
-#             if sem.acquire(blocking=False):
-#                 try:
-#                     for i in range(0, 10):
-#                         cl.controls.append(ft.Text(f"Text line {s.i}", key=str(s.i),expand=True))
-#                         s.i += 1
-#                     cl.update()
-#                 finally:
-#                     sem.release()
-
-#     cl = ft.Column(
-#         spacing=ft.alignment.center,
-#         height=100,
-#         width=200,
-#         scroll=ft.ScrollMode.ALWAYS,
-#         # alignment=ft.alignment.
-#         # on_scroll_interval=0,
-#         # on_scroll=on_scroll,
-#     )
-#     # for i in range(0, 50):
-#     #     cl.controls.append(ft.Text(f"Text line {s.i}", key=str(s.i)))
-#     #     s.i += 1
-    
-    
-#     page.add(
-#         ft.Container(cl,alignment=ft.alignment.center),
-#         ft.TextField()
-#     )
-    
+if __name__ == "__main__":
+    ft.app(target=main)
