@@ -1,49 +1,78 @@
-from flet import *
+from dotenv import load_dotenv
+import openai
+import os
 
-def main(page: Page):
-    page.title = "Osaka ni Oide"
+load_dotenv()
 
-    page.appbar = AppBar(title=Text("index"))
-    page.controls.append(ElevatedButton("Visit Doutonbori", on_click=lambda _: page.go("/doutonbori")))
+KEY = os.getenv("CHATGPT4_APIKEY")
+print(KEY)
 
+openai.api_key = KEY
 
-    def route_change(route):
-        if page.route == "/doutonbori":
-            page.views.append(
-                View(
-                    "/doutonbori",
-                    [
-                        AppBar(title=Text("Doutonbori")),
-                        ElevatedButton("Search Takoyaki", on_click=lambda _: page.go("/doutonbori/takoyaki")),
-                    ],
-                )
-            )
+messages = [
+  {"role": "system", "content": "You are a helpful assistant."},
+  {"role": "user", "content": "Who won the world series in 2020?"},
+  {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
+  {"role": "user", "content": "Where was it played?"}
+]
 
-        if page.route == "/doutonbori/takoyaki":
-            page.views.append(
-                View(
-                    "/doutonbori/takoyaki",
-                    [
-                        AppBar(title=Text("Takoyaki")),
-                        Text("たこ焼き食べたい"),
-                    ],
-                )
-            )
-        page.update()
+completion = openai.ChatCompletion.create(
+  model="gpt-3.5-turbo",
+  messages=messages
+)
 
-    def view_pop(view):
-        page.views.pop()
-        if len(page.views) > 1:
-            page.update()
-        else : page.go('/')
-
-    page.on_route_change = route_change
-    page.on_view_pop = view_pop
-    page.go(page.route)
+print(completion)
 
 
-if __name__ == '__main__':
-    app(target=main)
+
+
+
+#from flet import *
+
+# def main(page: Page):
+#     page.title = "Osaka ni Oide"
+
+#     page.appbar = AppBar(title=Text("index"))
+#     page.controls.append(ElevatedButton("Visit Doutonbori", on_click=lambda _: page.go("/doutonbori")))
+
+
+#     def route_change(route):
+#         if page.route == "/doutonbori":
+#             page.views.append(
+#                 View(
+#                     "/doutonbori",
+#                     [
+#                         AppBar(title=Text("Doutonbori")),
+#                         ElevatedButton("Search Takoyaki", on_click=lambda _: page.go("/doutonbori/takoyaki")),
+#                     ],
+#                 )
+#             )
+
+#         if page.route == "/doutonbori/takoyaki":
+#             page.views.append(
+#                 View(
+#                     "/doutonbori/takoyaki",
+#                     [
+#                         AppBar(title=Text("Takoyaki")),
+#                         Text("たこ焼き食べたい"),
+#                     ],
+#                 )
+#             )
+#         page.update()
+
+#     def view_pop(view):
+#         page.views.pop()
+#         if len(page.views) > 1:
+#             page.update()
+#         else : page.go('/')
+
+#     page.on_route_change = route_change
+#     page.on_view_pop = view_pop
+#     page.go(page.route)
+
+
+# if __name__ == '__main__':
+#     app(target=main)
 
 
 # import threading

@@ -75,7 +75,7 @@ class Talking(ft.UserControl):
         message = {"role": "user", "content": question}
         self.ChatHistory.append(message)
         self.update()
-        self.setter_answer(question)
+        self.setter_answer(message)
 
     def resize(self, height, width):
         self.cl.height = height - 180
@@ -87,10 +87,11 @@ class Talking(ft.UserControl):
         self.cl.controls.append(text)
         text.value = 'ChatGPT\n'
         self.update()
+        print(question)
         time.sleep(0.5)
 
         res = openai.ChatCompletion.create(model=self.model,
-                                           messages=self.ChatHistory if self.is_use_history else question,
+                                           messages=self.ChatHistory if self.is_use_history else [question],
                                            temperature=self.temperature,
                                            stream=self.strem)
 
@@ -115,7 +116,7 @@ class Talking(ft.UserControl):
             text.value = str(ans)
             u = res["usage"]
             print(u["prompt_tokens"], u["completion_tokens"], u["total_tokens"])
-        self.ChatHistory = {"role": "assistant", "content": ans}
+        self.ChatHistory.append({"role": "assistant", "content": ans})
 
         # self.ChatHistory.append({"role": "assistant", "content": ans})
         self.update()
