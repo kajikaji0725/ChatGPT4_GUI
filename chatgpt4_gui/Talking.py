@@ -44,7 +44,7 @@ class Talking(ft.UserControl):
         self.model = 'gpt-3.5-turbo'
         self.is_use_history = False
         self.setter_histrory_initialize()
-    
+
     def setter_histrory_initialize(self):
         self.ChatHistory.clear()
         self.cl.clean()
@@ -71,7 +71,8 @@ class Talking(ft.UserControl):
         self.max_tokens = max_token
 
     def setter_question(self, question):
-        self.cl.controls.append(ft.Text(f"ユーザ\n{question}\n", size=15))
+        self.cl.controls.append(
+            ft.Text(f"ユーザ\n{question}\n", size=15, selectable=True))
         message = {"role": "user", "content": question}
         self.ChatHistory.append(message)
         self.update()
@@ -83,7 +84,7 @@ class Talking(ft.UserControl):
         self.update()
 
     def setter_answer(self, question):
-        text = ft.Text(size=15)
+        text = ft.Text(size=15,selectable=True)
         self.cl.controls.append(text)
         text.value = 'ChatGPT\n'
         self.update()
@@ -91,7 +92,8 @@ class Talking(ft.UserControl):
         time.sleep(0.5)
 
         res = openai.ChatCompletion.create(model=self.model,
-                                           messages=self.ChatHistory if self.is_use_history else [question],
+                                           messages=self.ChatHistory if self.is_use_history else [
+                                               question],
                                            temperature=self.temperature,
                                            stream=self.strem)
 

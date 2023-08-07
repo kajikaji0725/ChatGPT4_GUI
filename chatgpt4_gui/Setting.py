@@ -92,4 +92,5 @@ class Setting(ft.UserControl):
         self.model = e.page._index[str(e.target)].label
         self.checkBox_gpt_3_5.value = self.model == "gpt-3.5-turbo"
         self.checkBox_gpt_4.value = self.model == "gpt-4"
+        self.view.setter_gpt_model(self.model)
         self.update()
