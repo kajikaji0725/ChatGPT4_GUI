@@ -1,5 +1,3 @@
-.env
-dist
-build
-main.spec
-test.py
+build/bin
+node_modules
+frontend/dist
