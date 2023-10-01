@@ -63,6 +63,9 @@ class View(ft.UserControl):
 
     def setter_is_use_history(self, is_use_history):
         self.talking.setter_is_use_history(is_use_history)
+    
+    def setter_is_auto_scroll(self,is_auto_scroll):
+        self.talking.setter_is_auto_scroll(is_auto_scroll)
 
     def getter_page(self):
         return self.page

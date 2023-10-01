@@ -8,17 +8,21 @@ class Setting(ft.UserControl):
         self.view = view
         self.stream = True
         self.is_use_history = False
+        self.is_auto_scroll = False
         self.model = "gpt-3.5-turbo"
         self.temp = 0
+        
         self.checkBox_gpt_3_5 = ft.Checkbox(
             label="gpt-3.5-turbo", value=self.model == "gpt-3.5-turbo", on_change=self.chenge_chatGPT_mode)
         self.checkBox_gpt_4 = ft.Checkbox(
             label="gpt-4", value=self.model == "gpt-4", on_change=self.chenge_chatGPT_mode)
-
         self.checkBox_strem = ft.Checkbox(
             label="strem", value=self.stream, on_change=self.chenge_restrem)
         self.checkBox_is_use_history = ft.Checkbox(
             label="is_use_history", value=self.is_use_history, on_change=self.chenge_is_use_history
+        )
+        self.checkBox_is_auto_scroll = ft.Checkbox(
+            label="is_auto_scroll", value=self.is_auto_scroll, on_change=self.chenge_is_auto_scroll
         )
 
         self.page = view.getter_page()
@@ -38,6 +42,7 @@ class Setting(ft.UserControl):
         return ft.Column(controls=[
             self.checkBox_strem,
             self.checkBox_is_use_history,
+            self.checkBox_is_auto_scroll,
             ft.Row(controls=[
                 ft.Text("ChatGPT_mode"),
                 self.checkBox_gpt_3_5,
@@ -48,12 +53,14 @@ class Setting(ft.UserControl):
     def setter_initialize(self):
         self.stream = True
         self.is_use_history = False
+        self.is_auto_scroll = False
         self.model = "gpt-3.5-turbo"
         self.temp = 0
         self.checkBox_gpt_3_5.value = self.model == "gpt-3.5-turbo"
         self.checkBox_gpt_4.value = self.model == "gpt-4"
         self.checkBox_strem.value = self.stream
         self.checkBox_is_use_history.value = self.is_use_history
+        self.checkBox_is_auto_scroll.value = self.is_auto_scroll
         self.update()
 
     def close_dialog_initialize(self, e):
@@ -79,6 +86,9 @@ class Setting(ft.UserControl):
 
     def setter_is_use_history(self):
         self.view.setter_is_use_history(self.is_use_history)
+    
+    def setter_is_auto_scroll(self):
+        self.view.setter_is_auto_scroll(self.is_auto_scroll)
 
     def chenge_restrem(self, e):
         self.stream = e.data
@@ -87,6 +97,10 @@ class Setting(ft.UserControl):
     def chenge_is_use_history(self, e):
         self.is_use_history = e.data
         self.setter_is_use_history()
+    
+    def chenge_is_auto_scroll(self,e):
+        self.is_auto_scroll = e.data
+        self.setter_is_auto_scroll()
 
     def chenge_chatGPT_mode(self, e):
         self.model = e.page._index[str(e.target)].label
