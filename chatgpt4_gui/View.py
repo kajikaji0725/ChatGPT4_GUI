@@ -95,6 +95,6 @@ class View(ft.UserControl):
         for i in self.talking.getter_cl().controls:
             text.append(i._Control__attrs['value'][0])
 
-        with open(f'{self.save_path}.txt', 'w') as f:
+        with open(f'{self.save_path}.txt', 'w',encoding='UTF-8') as f:
             f.write(str(self.talking.getter_config_infomation())+'\n')
             f.writelines([txt+'\n' for txt in text])
