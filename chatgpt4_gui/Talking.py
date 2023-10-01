@@ -12,13 +12,14 @@ class Talking(ft.UserControl):
         self.model = 'gpt-3.5-turbo'
         self.is_use_history = False
         self.API_Key = None
+        self.is_auto_scroll = False
 
         self.cl = ft.Column(
             spacing=ft.alignment.center,
             height=100,
             width=200,
             scroll=ft.ScrollMode.ALWAYS,
-            auto_scroll=True
+            auto_scroll=self.is_auto_scroll
         )
         self.ChatHistory = []
 
@@ -30,7 +31,7 @@ class Talking(ft.UserControl):
         return self.ChatHistory
 
     def getter_config_infomation(self):
-        return {"model": self.model, "strem": self.strem, "is_use_history": self.is_use_history, "temperature": self.temperature}
+        return {"model": self.model, "strem": self.strem, "is_use_history": self.is_use_history, "is_auto_scroll":self.is_auto_scroll, "temperature": self.temperature}
 
     def getter_API_key(self):
         return self.API_Key
@@ -43,6 +44,8 @@ class Talking(ft.UserControl):
         self.strem = True
         self.model = 'gpt-3.5-turbo'
         self.is_use_history = False
+        self.is_auto_scroll = False
+        self.cl.auto_scroll = self.is_auto_scroll
         self.setter_histrory_initialize()
 
     def setter_histrory_initialize(self):
@@ -58,7 +61,11 @@ class Talking(ft.UserControl):
 
     def setter_is_use_history(self, is_use_history):
         self.is_use_history = is_use_history
-
+    
+    def setter_is_auto_scroll(self,is_auto_scroll):
+        self.is_auto_scroll = is_auto_scroll
+        self.cl.auto_scroll = self.is_auto_scroll
+    
     def setter_temp(self, temp):
         self.temperature = temp
 
